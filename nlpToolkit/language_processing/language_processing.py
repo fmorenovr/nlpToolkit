@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from crimebb.text_processing import TextProcesser
+from nlpToolkit.text_processing import TextProcesser
 from nltk.corpus import stopwords
 
 import enchant

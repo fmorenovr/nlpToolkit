@@ -1,4 +1,5 @@
-from .text_metrics import *
+from .text_metrics import TextMetric
+from .text_explainer import TextExplainer
 from .text_processing import TextProcesser
 
 # import nltk
