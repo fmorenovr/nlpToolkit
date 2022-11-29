@@ -7,10 +7,22 @@ Toolkits to pre-process text to be trained using NLP
     conda env create --name nlpToolkit --file requirements.yaml 
 ```
 
+or
+
+```
+    pip install -r requirements.txt
+```
+
 **2) Updating conda environment**
 
 ```
-    conda env export > requirements.yml
+    conda env export > requirements.yaml
+```
+
+or
+
+```
+    pip list --format=freeze > requirements.txt
 ```
 
 **3) Using as git submodule**
