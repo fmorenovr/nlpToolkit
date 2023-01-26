@@ -3,7 +3,7 @@ import numpy as np
 import random
 import itertools
 
-from nlpToolkit.text_processing import TextProcesser
+from ..text_processing import TextProcesser
 from nltk import FreqDist
 from wordcloud import WordCloud
 

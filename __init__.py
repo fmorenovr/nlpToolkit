@@ -1,1 +1,1 @@
-from nlpToolkit import *
+from .nlpToolkit import *
