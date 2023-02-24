@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import itertools
+import copy
 
 from ..text_processing import TextProcesser
 from nltk import FreqDist
@@ -42,7 +43,7 @@ class WordCloudPlotter:
         self.to_gray_scale = to_gray_scale
         self.random_state = random_state
 
-        if self.mask is None:
+        if self.mask is "circular":
             self.mask = self.generate_circular_mask()
 
         self.wc_plotter = WordCloud(min_font_size=self.min_font_size,  
@@ -66,6 +67,12 @@ class WordCloudPlotter:
     def generate_circular_mask(self):
         x, y = np.ogrid[:self.widht, :self.height]
         mask = (x - self.widht/2) ** 2 + (y - self.widht/2) ** 2 > (self.widht/2) ** 2
+        mask = 255 * mask.astype(int)
+        return mask
+        
+    def generate_square_mask(self):
+        x, y = np.ogrid[:self.widht, :self.height]
+        mask = max(abs(x - self.widht/2), abs(y - self.widht/2) > (self.widht/2)
         mask = 255 * mask.astype(int)
         return mask
 
@@ -104,7 +111,16 @@ class WordCloudPlotter:
             word_list = self.process_wordlist(word_list, languages_list)
 
         self.freq_dict = FreqDist(word_list)
-
+        
+    def get_freq_dict(self):
+        return self.freq_dict
+    
+    def remove_words_from_dict(self, rm_list=[]):
+        freq_dict = copy.deepcoty(self.get_freq_dict())
+        for key in rm_list:
+            freq_dict.pop(key, None)
+        return freq_dict
+            
     def plotWordCloud(self, title): 
 
         self.wc_plotter.generate_from_frequencies(self.freq_dict)
