@@ -13,7 +13,7 @@ class WordCloudPlotter:
     def __init__(self, language_to_process=None, 
                         max_words=10000, 
                         mask=None, 
-                        widht=1000, 
+                        width=1000, 
                         height=1000, 
                         min_font_size=10, 
                         max_font_size=300, 
@@ -25,7 +25,7 @@ class WordCloudPlotter:
         Args:
             max_words (int): Number of words to show.
             mask (func): Area to draw.
-            widht (int): widht of the output image.
+            width (int): width of the output image.
             height (int): height of the output image.
             figsize (tuple): output image size.
             to_gray_scale (bool): draw in gray/rgb
@@ -34,7 +34,7 @@ class WordCloudPlotter:
         self.txt_processer = TextProcesser(language_to_process = language_to_process, log_tqdm=False)
         self.max_words = max_words
         self.mask = mask
-        self.widht = widht
+        self.width = width
         self.height = height
         self.min_font_size=min_font_size
         self.max_font_size=max_font_size
@@ -45,6 +45,8 @@ class WordCloudPlotter:
 
         if self.mask is "circular":
             self.mask = self.generate_circular_mask()
+        elif self.mask is "diamond":
+            self.mask = self.generate_diamond_mask()
 
         self.wc_plotter = WordCloud(min_font_size=self.min_font_size,  
                                     max_font_size=self.max_font_size, 
@@ -65,16 +67,23 @@ class WordCloudPlotter:
 
     # return circular area
     def generate_circular_mask(self):
-        x, y = np.ogrid[:self.widht, :self.height]
-        mask = (x - self.widht/2) ** 2 + (y - self.widht/2) ** 2 > (self.widht/2) ** 2
+        x, y = np.ogrid[:self.width, :self.height]
+        mask = (x - self.width/2) ** 2 + (y - self.width/2) ** 2 > (self.width/2) ** 2
+        mask = 255 * mask.astype(int)
+        return mask
+    
+    # return diamond area    
+    def generate_diamond_mask(self):
+        x, y = np.ogrid[:self.width, :self.height]
+        mask = abs(x-self.width/2) + abs(y-self.width/2) > self.width/2
         mask = 255 * mask.astype(int)
         return mask
         
-    def generate_square_mask(self):
-        x, y = np.ogrid[:self.widht, :self.height]
-        mask = max(abs(x - self.widht/2), abs(y - self.widht/2) > (self.widht/2)
-        mask = 255 * mask.astype(int)
-        return mask
+    #def generate_square_mask(self):
+    #    x, y = np.ogrid[:self.width, :self.height]
+    #    mask = max(abs(x - self.width/2), abs(y - self.width/2)) > (self.width/2)
+    #    mask = 255 * mask.astype(int)
+    #    return mask
 
     # return words freq dict
     def process_texts_by_language(self, texts, language_to_process="english"):
