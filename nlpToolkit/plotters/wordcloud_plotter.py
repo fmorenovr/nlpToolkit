@@ -3,6 +3,7 @@ import numpy as np
 import random
 import itertools
 import copy
+from pathlib import Path
 
 from ..text_processing import TextProcesser
 from nltk import FreqDist
@@ -42,11 +43,19 @@ class WordCloudPlotter:
         self.background_color=background_color
         self.to_gray_scale = to_gray_scale
         self.random_state = random_state
+        
+        current_path = str(Path(__file__).parent.resolve())
+        
+        self.IMG_PATH = f"{current_path}/../images/"
 
         if self.mask is "circular":
             self.mask = self.generate_circular_mask()
         elif self.mask is "diamond":
             self.mask = self.generate_diamond_mask()
+        elif self.mask is "hacker":
+            self.mask = self.generate_image_mask("hacker_mask")
+        else:
+            self.mask = self.generate_circular_mask()
 
         self.wc_plotter = WordCloud(min_font_size=self.min_font_size,  
                                     max_font_size=self.max_font_size, 
@@ -64,6 +73,16 @@ class WordCloudPlotter:
     # return gray scale
     def to_grey_color_func(self, word, font_size, position, orientation, random_state=None, **kwargs):
         return "hsl(0, 0%%, %d%%)" % random.randint(60, 100)
+
+    # return img area
+    def generate_image_mask(self, namefile):
+        from PIL import Image
+        png = Image.open(f"{self.IMG_PATH}{namefile}.png").convert('RGBA')
+        background = Image.new('RGBA', png.size, (255,255,255))
+
+        alpha_composite = Image.alpha_composite(background, png)
+        mask = np.asarray(alpha_composite.convert('RGB'))
+        return mask
 
     # return circular area
     def generate_circular_mask(self):
