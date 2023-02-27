@@ -177,7 +177,7 @@ class WordCloudPlotter:
 
         fig = plt.figure(figsize=self.figsize)
         plt.axis("off")
-        plt.title(title, fontsize=15)
+        plt.title(title, fontsize=fontsize)
         if self.to_gray_scale:
             plt.imshow(self.wc_plotter.recolor(color_func=self.to_grey_color_func, random_state=3), interpolation="bilinear")
         else:
