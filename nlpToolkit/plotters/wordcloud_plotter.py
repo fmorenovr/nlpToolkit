@@ -61,6 +61,8 @@ class WordCloudPlotter:
             self.mask = self.generate_rectangle_mask()
         elif self.mask is "hacker":
             self.mask = self.generate_image_mask("hacker_mask")
+        else:
+            self.mask = self.generate_rectangle_mask()
 
         self.wc_plotter = WordCloud(min_font_size=self.min_font_size,  
                                     max_font_size=self.max_font_size, 
