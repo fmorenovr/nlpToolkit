@@ -116,14 +116,14 @@ class WordCloudPlotter:
     def generate_square_mask(self):
         x, y = np.ogrid[:self.width, :self.width]
         mask = x+y >=0
-        mask = 255 * mask.astype(int)
+        mask = 0 * mask.astype(int)
         return mask
     
     # return rectangle area
     def generate_rectangle_mask(self):
         x, y = np.ogrid[:self.width, :self.width*self.factor]
         mask = x+y >=0
-        mask = 255 * mask.astype(int)
+        mask = 0 * mask.astype(int)
         return mask
 
     # return words freq dict
