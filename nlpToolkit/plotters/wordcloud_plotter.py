@@ -37,6 +37,9 @@ class WordCloudPlotter:
         self.mask = mask
         self.width = width
         self.height = height
+        self.radius = width/2
+        self.factor=2
+        
         self.min_font_size=min_font_size
         self.max_font_size=max_font_size
         self.figsize = figsize
@@ -52,17 +55,20 @@ class WordCloudPlotter:
             self.mask = self.generate_circular_mask()
         elif self.mask is "diamond":
             self.mask = self.generate_diamond_mask()
+        elif self.mask is "square":
+            self.mask = self.generate_square_mask()
+        elif self.mask is "rectangle":
+            self.mask = self.generate_rectangle_mask()
         elif self.mask is "hacker":
             self.mask = self.generate_image_mask("hacker_mask")
-        else:
-            self.mask = self.generate_circular_mask()
 
         self.wc_plotter = WordCloud(min_font_size=self.min_font_size,  
                                     max_font_size=self.max_font_size, 
                                     background_color=self.background_color, 
                                     max_words=self.max_words, 
                                     mask=self.mask, 
-                                    contour_color='steelblue', 
+                                    contour_width=3,
+                                    contour_color='black', 
                                     random_state=self.random_state,
                                     )
 
@@ -73,6 +79,12 @@ class WordCloudPlotter:
     # return gray scale
     def to_grey_color_func(self, word, font_size, position, orientation, random_state=None, **kwargs):
         return "hsl(0, 0%%, %d%%)" % random.randint(60, 100)
+
+    def set_radius(self, radius=500):
+        self.radius = radius
+    
+    def set_radius(self, factor=2):
+        self.factor = factor
 
     # return img area
     def generate_image_mask(self, namefile):
@@ -87,22 +99,30 @@ class WordCloudPlotter:
     # return circular area
     def generate_circular_mask(self):
         x, y = np.ogrid[:self.width, :self.height]
-        mask = (x - self.width/2) ** 2 + (y - self.width/2) ** 2 > (self.width/2) ** 2
+        mask = (x - self.width/2) ** 2 + (y - self.height/2) ** 2 > (self.radius) ** 2
         mask = 255 * mask.astype(int)
         return mask
     
     # return diamond area    
     def generate_diamond_mask(self):
         x, y = np.ogrid[:self.width, :self.height]
-        mask = abs(x-self.width/2) + abs(y-self.width/2) > self.width/2
+        mask = abs(x-self.width/2) + abs(y-self.width/2) > self.radius
         mask = 255 * mask.astype(int)
         return mask
-        
-    #def generate_square_mask(self):
-    #    x, y = np.ogrid[:self.width, :self.height]
-    #    mask = max(abs(x - self.width/2), abs(y - self.width/2)) > (self.width/2)
-    #    mask = 255 * mask.astype(int)
-    #    return mask
+    
+    # return square area
+    def generate_square_mask(self):
+        x, y = np.ogrid[:self.width, :self.width]
+        mask = x+y >=0
+        mask = 255 * mask.astype(int)
+        return mask
+    
+    # return rectangle area
+    def generate_rectangle_mask(self):
+        x, y = np.ogrid[:self.width, :self.width*self.factor]
+        mask = x+y >=0
+        mask = 255 * mask.astype(int)
+        return mask
 
     # return words freq dict
     def process_texts_by_language(self, texts, language_to_process="english"):
@@ -149,13 +169,13 @@ class WordCloudPlotter:
             freq_dict.pop(key, None)
         return freq_dict
             
-    def plotWordCloud(self, title): 
+    def plotWordCloud(self, title, fontsize=30): 
 
         self.wc_plotter.generate_from_frequencies(self.freq_dict)
 
         fig = plt.figure(figsize=self.figsize)
         plt.axis("off")
-        plt.title(title)
+        plt.title(title, fontsize=15)
         if self.to_gray_scale:
             plt.imshow(self.wc_plotter.recolor(color_func=self.to_grey_color_func, random_state=3), interpolation="bilinear")
         else:
