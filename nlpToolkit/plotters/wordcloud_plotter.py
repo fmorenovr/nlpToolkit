@@ -51,15 +51,15 @@ class WordCloudPlotter:
         
         self.IMG_PATH = f"{current_path}/../images/"
 
-        if self.mask is "circular":
+        if self.mask == "circular":
             self.mask = self.generate_circular_mask()
-        elif self.mask is "diamond":
+        elif self.mask == "diamond":
             self.mask = self.generate_diamond_mask()
-        elif self.mask is "square":
+        elif self.mask == "square":
             self.mask = self.generate_square_mask()
-        elif self.mask is "rectangle":
+        elif self.mask == "rectangle":
             self.mask = self.generate_rectangle_mask()
-        elif self.mask is "hacker":
+        elif self.mask == "hacker":
             self.mask = self.generate_image_mask("hacker_mask")
         else:
             self.mask = self.generate_rectangle_mask()
