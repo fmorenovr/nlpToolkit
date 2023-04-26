@@ -29,4 +29,5 @@ or
 
 ```
 git submodule add -b main https://github.com/fmorenovr/nlpToolkit.git path_to_install/nlpToolkit
+git submodule update --remote
 ```
