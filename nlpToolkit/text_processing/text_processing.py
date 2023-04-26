@@ -43,6 +43,10 @@ class TextProcesser:
         self.keyword_sep = keyword_sep
         self.log_tqdm = log_tqdm
         self.exclude_pipe = exclude_pipe
+        self.txt_filter = TextFilter(None, keep_stopwords=True, 
+                                      keep_puncts=True, 
+                                      keep_currency=True, 
+                                      keyword_sep=self.keyword_sep)
         
         if self.language_to_process is not None:
             self.create_nlp()
@@ -199,11 +203,6 @@ class TextProcesser:
     
     def process_wordlist(self, tokens, languages_list=[]):
 
-        txt_filter = TextFilter(None, keep_stopwords=True, 
-                                      keep_puncts=True, 
-                                      keep_currency=True, 
-                                      keyword_sep=self.keyword_sep)
-
         if type(languages_list)==str:
             languages_list = [languages_list]
 
@@ -222,7 +221,7 @@ class TextProcesser:
         
         word_list = [ token for token in tokens if token not in filter_words and token not in filter_puncts]
         
-        word_list = txt_filter.filter(word_list)
+        word_list = self.txt_filter.filter(word_list)
         self.word_list = word_list
         
         return word_list

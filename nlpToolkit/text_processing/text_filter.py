@@ -73,15 +73,12 @@ class TextFilter:
 
     def filter_special_characters(self, token):
 
-        # reduce spaces to just inside sentences
-        new_token = re.sub(r'\s+', ' ', token)
-
-        # removing spaces in front and back
-        new_token = new_token.strip()
-        
         # filter keyword
-        new_token = re.sub(self.keyword_sep, '', new_token)
-
+        new_token = re.sub(self.keyword_sep, ' ', token)
+        
+        # filter unknown characters
+        new_token = re.sub('�', ' ', new_token)
+        
         # remove if is composed by only special characters
         new_token = re.sub('^[_\W]+$', " ", new_token)
 
@@ -130,7 +127,9 @@ class TextFilter:
             flags=re.UNICODE
         )
         
-        return EMOJI_PATTERN.sub('', token.strip())
+        new_token = EMOJI_PATTERN.sub(' ', token.strip())
+        
+        return new_token.strip()
     
     def is_stopword(self, token):
         return len(self.filter_stopwords(token)) == 0
@@ -150,32 +149,58 @@ class TextFilter:
     def filter_currency(self, token):
         return "" if self.nlp.vocab[token].is_currency else token.strip()
         
+    def filter_spaces(self, token):
+        
+        # removing spaces in front and back
+        new_token = token.strip()
+        
+        # reduce spaces to just inside sentences
+        new_token = re.sub(r'\s+', ' ', new_token)
+        
+        return new_token.strip()
+        
+    def break_subTokens(self, tokens):
+        known_tokens = []
+        
+        for token in tokens:
+            sub_tokens = token.split()
+            known_tokens.extend(sub_tokens)
+        
+        return known_tokens
+        
     def filter(self, tokens):
         """Filter stopwords, emojis, special characters, and punctuation from phrase.
         Args:
             tokens (list of str): List of tokens.
         """
+        # Remove extra spaces
+        filtered_tokens = copy.deepcopy([self.filter_spaces(token) for token in tokens if len(token)>0])
+        filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
+        
         # Remove emojis
         if not self.keep_emojis:
-            filtered_tokens = copy.deepcopy([self.filter_emojis(token) for token in tokens])
-        else:
-            filtered_tokens = copy.deepcopy(tokens)
+            filtered_tokens = copy.deepcopy([self.filter_emojis(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
             
         # Remove special characters
         if not self.keep_specials:
-            filtered_tokens = copy.deepcopy([self.filter_special_characters(token) for token in filtered_tokens])
+            filtered_tokens = copy.deepcopy([self.filter_special_characters(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
         
         # Filter stopwords
         if not self.keep_stopwords:
-            filtered_tokens = copy.deepcopy([self.filter_stopwords(token) for token in filtered_tokens])
+            filtered_tokens = copy.deepcopy([self.filter_stopwords(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
             
         # Remove punctuations
         if not self.keep_puncts:
-            filtered_tokens = copy.deepcopy([self.filter_punctuations(token) for token in filtered_tokens])
+            filtered_tokens = copy.deepcopy([self.filter_punctuations(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
             
         # Remove currency
         if not self.keep_currency:
-            filtered_tokens = copy.deepcopy([self.filter_currency(token) for token in filtered_tokens])
+            filtered_tokens = copy.deepcopy([self.filter_currency(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
 
         # Remove '' characters
         filtered_tokens = [token for token in filtered_tokens if len(token)>0]
