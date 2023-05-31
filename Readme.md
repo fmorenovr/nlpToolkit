@@ -25,9 +25,25 @@ or
     pip list --format=freeze > requirements.txt
 ```
 
-**3) Using as git submodule**
+### Add submodule
 
 ```
 git submodule add -b main https://github.com/fmorenovr/nlpToolkit.git path_to_install/nlpToolkit
 git submodule update --remote
+```
+
+### Delete submodule
+
+* First, remove local directories:
+```
+git rm --cached path_to_submodule
+rm -rf path_to_submodule
+```
+
+* Then, remove it in files `.gitsubmodules` and `.git/config`.
+
+* Finally, remove it from git:
+
+```
+rm -rf .git/modules/path_to_submodule
 ```
