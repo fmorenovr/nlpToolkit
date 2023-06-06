@@ -133,6 +133,7 @@ class LanguageProcesser:
             languages_ratios[language]["incorrect_words"] = incorrect_words_lang
             languages_ratios[language]["correct_words"] = correct_words_lang
             languages_ratios[language]["text_processed"] = text_processed
+            languages_ratios[language]["total_words"] = len(word_list)
         
         return languages_ratios
     
@@ -149,6 +150,7 @@ class LanguageProcesser:
             incorrect_words[lang] = lang_freq[lang]["incorrect_words"]
             correct_words[lang] = lang_freq[lang]["correct_words"]
             proc_txt[lang] = lang_freq[lang]["text_processed"]
+            total_words[lang] = lang_freq[lang]["total_words"]
         
         if max(ratios.values())>0.0:
             language_detected = max(ratios, key=ratios.get)
@@ -160,12 +162,14 @@ class LanguageProcesser:
             incorrect_words_list = list(set(itertools.chain(*incorrect_words.values())))
             correct_words_list = list(set(itertools.chain(*correct_words.values())))
             processed_text = ""
+            total_words = 0
 
         self.ratios = ratios
         self.language_detected = language_detected
         self.incorrect_words = incorrect_words_list
         self.correct_words = correct_words_list
         self.processed_text = processed_text
+        self.total_words = total_words
 
     def get_processed_text(self):
         return self.processed_text
@@ -181,6 +185,9 @@ class LanguageProcesser:
     # return language most rated
     def get_detected_language(self):
         return self.language_detected
+        
+    def get_total_words(self):
+        return self.total_words
 
     # return list of correct words in the most rated language
     def get_correct_words(self):        
