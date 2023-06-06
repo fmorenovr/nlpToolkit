@@ -144,6 +144,7 @@ class LanguageProcesser:
         incorrect_words = {}
         correct_words = {}
         proc_txt = {}
+        total_words = {}
         
         for lang in self.languages_to_eval:
             ratios[lang] = lang_freq[lang]["ratio"]
@@ -157,19 +158,20 @@ class LanguageProcesser:
             incorrect_words_list = list(incorrect_words[language_detected])
             correct_words_list = list(correct_words[language_detected])
             processed_text = proc_txt[language_detected]
+            total_word_ = total_words[lang]
         else:
             language_detected = "not found"
             incorrect_words_list = list(set(itertools.chain(*incorrect_words.values())))
             correct_words_list = list(set(itertools.chain(*correct_words.values())))
             processed_text = ""
-            total_words = 0
+            total_word_ = 0
 
         self.ratios = ratios
         self.language_detected = language_detected
         self.incorrect_words = incorrect_words_list
         self.correct_words = correct_words_list
         self.processed_text = processed_text
-        self.total_words = total_words
+        self.total_words = total_word_
 
     def get_processed_text(self):
         return self.processed_text
