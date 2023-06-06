@@ -84,7 +84,7 @@ class TextFilter:
         
         # remove special characters (any) within string
         # except - : /
-        new_token = re.sub('[^a-zA-Z0-9\s-:/]', '', new_token)
+        new_token = re.sub('[^a-zA-Z0-9\s:/-]', '', new_token)
 
         # remove all single characters
         #new_token = re.sub(r'\s+[a-zA-Z]\s+', ' ', new_token)
