@@ -9,20 +9,23 @@ from spacy.tokens import Doc, Token
                                                  "keep_puncts": False, 
                                                  "keep_specials": False, 
                                                  "keep_emojis": False, 
-                                                 "keep_currency": False})
+                                                 "keep_currency": False, 
+                                                 "keep_digits": False})
 def create_text_filter(nlp: Language, 
                        name: str, 
                        keep_stopwords: bool, 
                        keep_puncts: bool, 
                        keep_specials: bool, 
                        keep_emojis: bool, 
-                       keep_currency: bool ):
+                       keep_currency: bool,
+                       keep_digits: bool ):
     return TextFilter(nlp, 
                       keep_stopwords=keep_stopwords, 
                       keep_puncts=keep_puncts, 
                       keep_specials=keep_specials, 
                       keep_emojis=keep_emojis, 
-                      keep_currency=keep_currency)
+                      keep_currency=keep_currency,
+                      keep_digits=keep_digits)
 
 class TextFilter:
     def __init__(self, nlp: Language,
@@ -31,6 +34,7 @@ class TextFilter:
                        keep_specials=False, 
                        keep_emojis=False,
                        keep_currency=False,
+                       keep_digits=False,
                        keyword_sep="FAMVEER"):
                        
         self.keep_stopwords = keep_stopwords
@@ -39,6 +43,7 @@ class TextFilter:
         self.keep_emojis = keep_emojis
         self.keyword_sep = keyword_sep
         self.keep_currency = keep_currency
+        self.keep_digits = keep_digits
         self.nlp = nlp
         
         Token.set_extension("is_emoji", default=None, force=True)
@@ -46,6 +51,7 @@ class TextFilter:
         Token.set_extension("is_stopword", default=None, force=True)
         Token.set_extension("is_punctuation", default=None, force=True)
         Token.set_extension("is_currency", default=None, force=True)
+        Token.set_extension("is_digit", default=None, force=True)
         Token.set_extension("to_remove", default=None, force=True)
     
     def __call__(self, doc: Doc) -> Doc:
@@ -56,14 +62,16 @@ class TextFilter:
             is_stopword = self.is_stopword(token.text.lower())
             is_punctutation = self.is_punctuation(token.text.lower())
             is_currency = self.is_currency(token.text.lower())
+            is_digit = self.is_digit(token.text.lower())
             
-            to_remove = is_emoji or is_special_character or is_stopword or is_punctutation or is_currency
+            to_remove = is_emoji or is_special_character or is_stopword or is_punctutation or is_currency or is_digit
         
             token._.set("is_emoji", is_emoji)
             token._.set("is_special_character", is_special_character)
             token._.set("is_stopword", is_stopword)
             token._.set("is_punctuation", is_punctutation)
             token._.set("is_currency", is_currency)
+            token._.set("is_digit", is_digit)
             token._.set("to_remove", to_remove)
             
         return doc
@@ -146,6 +154,12 @@ class TextFilter:
 
     def filter_punctuations(self, token):
         return "" if self.nlp.vocab[token].is_punct else token.strip()
+        
+    def is_digit(self, token):
+        return len(self.filter_digits(token)) == 0
+    
+    def filter_digits(self, token):
+        return "" if token.isdigit() else token.strip()
 
     def is_currency(self, token):
         return len(self.filter_currency(token)) == 0
@@ -200,7 +214,12 @@ class TextFilter:
         if not self.keep_puncts:
             filtered_tokens = copy.deepcopy([self.filter_punctuations(token) for token in filtered_tokens if len(token)>0])
             filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
-            
+        
+        # Remove digits
+        if not self.keep_digits:
+            filtered_tokens = copy.deepcopy([self.filter_digits(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
+        
         # Remove currency
         if not self.keep_currency:
             filtered_tokens = copy.deepcopy([self.filter_currency(token) for token in filtered_tokens if len(token)>0])

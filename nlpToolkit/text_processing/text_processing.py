@@ -17,6 +17,8 @@ class TextProcesser:
                        keep_puncts=False, 
                        keep_specials=False, 
                        keep_emojis=False,
+                       keep_currency=False,
+                       keep_digits=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=True, 
                        exclude_pipe = ["parser", "ner"],
@@ -36,16 +38,25 @@ class TextProcesser:
         self.n_jobs = n_jobs
         self.to_lemma = to_lemma
         self.to_stem = to_stem
+        
         self.keep_stopwords = keep_stopwords
         self.keep_puncts = keep_puncts
         self.keep_specials = keep_specials
         self.keep_emojis = keep_emojis
+        self.keep_currency = keep_currency
+        self.keep_digits = keep_digits
+        
+        
         self.keyword_sep = keyword_sep
         self.log_tqdm = log_tqdm
         self.exclude_pipe = exclude_pipe
-        self.txt_filter = TextFilter(None, keep_stopwords=True, 
+        self.txt_filter = TextFilter(None, 
+                                      keep_stopwords=True, 
                                       keep_puncts=True, 
+                                      keep_specials=keep_specials,
+                                      keep_emojis=keep_emojis,
                                       keep_currency=True, 
+                                      keep_digits=keep_digits,
                                       keyword_sep=self.keyword_sep)
         
         if self.language_to_process is not None:
@@ -139,7 +150,8 @@ class TextProcesser:
                                                                    "keep_puncts": False, 
                                                                    "keep_specials": False, 
                                                                    "keep_emojis": False, 
-                                                                   "keep_currency": False})
+                                                                   "keep_currency": False,
+                                                                   "keep_digits": False})
         self.nlp.max_length = 10000000
 
     def generate_tokens_from_text(self, doc):
