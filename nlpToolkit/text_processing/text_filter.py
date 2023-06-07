@@ -58,13 +58,12 @@ class TextFilter:
     def __call__(self, doc: Doc) -> Doc:
         for token in doc:
         
-            is_stopword = self.is_stopword(token.text.lower()) and self.keep_stopwords
-            is_punctutation = self.is_punctuation(token.text.lower()) and self.keep_puncts
-            is_special_character = self.is_special_character(token.text.lower()) and self.keep_specials
-            is_emoji = self.is_emoji(token.text.lower()) and self.keep_emojis
-            
-            is_currency = self.is_currency(token.text.lower()) and self.keep_currency
-            is_digit = self.is_digit(token.text.lower()) and self.keep_digits
+            is_stopword = self.is_stopword(token.text.lower())
+            is_punctutation = self.is_punctuation(token.text.lower())
+            is_special_character = self.is_special_character(token.text.lower())
+            is_emoji = self.is_emoji(token.text.lower())
+            is_currency = self.is_currency(token.text.lower())
+            is_digit = self.is_digit(token.text.lower())
             
             to_remove = is_emoji and is_special_character and is_stopword and is_punctutation and is_currency and is_digit
         
