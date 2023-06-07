@@ -63,7 +63,7 @@ class TextFilter:
     
     def __call__(self, doc: Doc) -> Doc:
     
-        string_list = doc_to_list(doc)
+        string_list = self.doc_to_list(doc)
         filtered_string_list = self.filter(string_list)
         new_doc = self.list_to_doc(filtered_string_list)
     
