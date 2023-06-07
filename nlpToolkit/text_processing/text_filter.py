@@ -46,6 +46,7 @@ class TextFilter:
         self.keep_digits = keep_digits
         self.nlp = nlp
         
+        # Define extensions
         Token.set_extension("is_emoji", default=None, force=True)
         Token.set_extension("is_special_character", default=None, force=True)
         Token.set_extension("is_stopword", default=None, force=True)
@@ -66,6 +67,7 @@ class TextFilter:
             
             to_remove = is_emoji or is_special_character or is_stopword or is_punctutation or is_currency or is_digit
         
+            # Set extension values for each token
             token._.set("is_emoji", is_emoji)
             token._.set("is_special_character", is_special_character)
             token._.set("is_stopword", is_stopword)
@@ -199,11 +201,6 @@ class TextFilter:
         if not self.keep_emojis:
             filtered_tokens = copy.deepcopy([self.filter_emojis(token) for token in filtered_tokens if len(token)>0])
             filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
-            
-        # Remove special characters
-        if not self.keep_specials:
-            filtered_tokens = copy.deepcopy([self.filter_special_characters(token) for token in filtered_tokens if len(token)>0])
-            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
         
         # Filter stopwords
         if not self.keep_stopwords:
@@ -223,6 +220,11 @@ class TextFilter:
         # Remove currency
         if not self.keep_currency:
             filtered_tokens = copy.deepcopy([self.filter_currency(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
+            
+        # Remove special characters
+        if not self.keep_specials:
+            filtered_tokens = copy.deepcopy([self.filter_special_characters(token) for token in filtered_tokens if len(token)>0])
             filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
 
         # Remove '' characters

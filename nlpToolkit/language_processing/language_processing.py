@@ -12,7 +12,14 @@ class LanguageProcesser:
                        use_spacy=True, 
                        to_lemma=False, 
                        to_stem=False, 
+                       keep_stopwords=False, 
+                       keep_puncts=False, 
+                       keep_specials=False, 
+                       keep_emojis=False,
+                       keep_currency=False,
+                       keep_digits=False,
                        keyword_sep="FAMVEER",
+                       log_tqdm=False, 
                        nltk_keep_punct=True):
         """Full text preprocessing.
         Args:
@@ -33,9 +40,16 @@ class LanguageProcesser:
         self.keyword_sep = keyword_sep
         self.nltk_keep_punct = nltk_keep_punct
         self.txt_processer = TextProcesser(to_lemma=to_lemma, 
-                                           to_stem=to_stem, 
-                                           log_tqdm=False, 
-                                           keyword_sep=keyword_sep)
+                                           to_stem=to_stem,
+                                           keep_stopwords=keep_stopwords, 
+                                           keep_puncts=keep_puncts, 
+                                           keep_specials=keep_specials, 
+                                           keep_emojis=keep_emojis,
+                                           keep_currency=keep_currency,
+                                           keep_digits=keep_digits,
+                                           keyword_sep=keyword_sep, 
+                                           log_tqdm=log_tqdm, 
+                                           )
 
     # set nlp language
     def set_nlp_language(self, language_to_process):

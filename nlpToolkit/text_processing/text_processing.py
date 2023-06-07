@@ -51,11 +51,11 @@ class TextProcesser:
         self.log_tqdm = log_tqdm
         self.exclude_pipe = exclude_pipe
         self.txt_filter = TextFilter(None, 
-                                      keep_stopwords=True, 
-                                      keep_puncts=True, 
+                                      keep_stopwords=keep_stopwords, 
+                                      keep_puncts=keep_puncts, 
                                       keep_specials=keep_specials,
                                       keep_emojis=keep_emojis,
-                                      keep_currency=True, 
+                                      keep_currency=keep_currency, 
                                       keep_digits=keep_digits,
                                       keyword_sep=self.keyword_sep)
         
