@@ -19,6 +19,7 @@ class TextProcesser:
                        keep_emojis=False,
                        keep_currency=False,
                        keep_digits=False,
+                       keep_spaces=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=True, 
                        exclude_pipe = ["parser", "ner"],
@@ -45,6 +46,7 @@ class TextProcesser:
         self.keep_emojis = keep_emojis
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
+        self.keep_spaces = keep_spaces
         
         self.keyword_sep = keyword_sep
         self.log_tqdm = log_tqdm
@@ -55,7 +57,8 @@ class TextProcesser:
                                       keep_specials=keep_specials,
                                       keep_emojis=keep_emojis,
                                       keep_currency=keep_currency, 
-                                      keep_digits=keep_digits,
+                                      keep_digits=keep_digits, 
+                                      keep_spaces=keep_spaces,
                                       keyword_sep=self.keyword_sep)
         
         if self.language_to_process is not None:
@@ -150,7 +153,9 @@ class TextProcesser:
                                                                    "keep_specials": False, 
                                                                    "keep_emojis": False, 
                                                                    "keep_currency": False,
-                                                                   "keep_digits": False})
+                                                                   "keep_digits": False,
+                                                                   "keep_spaces": False,
+                                                                   })
         self.nlp.max_length = 10000000
 
     def generate_tokens_from_text(self, doc):

@@ -18,6 +18,7 @@ class LanguageProcesser:
                        keep_emojis=False,
                        keep_currency=False,
                        keep_digits=False,
+                       keep_spaces=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=False, 
                        nltk_keep_punct=True):
@@ -46,8 +47,9 @@ class LanguageProcesser:
                                            keep_specials=keep_specials, 
                                            keep_emojis=keep_emojis,
                                            keep_currency=keep_currency,
-                                           keep_digits=keep_digits,
-                                           keyword_sep=keyword_sep, 
+                                           keep_digits=keep_digits, 
+                                           keep_spaces=keep_spaces,
+                                           keyword_sep=keyword_sep,
                                            log_tqdm=log_tqdm, 
                                            )
 

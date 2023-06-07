@@ -10,7 +10,9 @@ from spacy.tokens import Doc, Token
                                                  "keep_specials": False, 
                                                  "keep_emojis": False, 
                                                  "keep_currency": False, 
-                                                 "keep_digits": False})
+                                                 "keep_digits": False, 
+                                                 "keep_spaces": False,
+                                                 })
 def create_text_filter(nlp: Language, 
                        name: str, 
                        keep_stopwords: bool, 
@@ -18,7 +20,8 @@ def create_text_filter(nlp: Language,
                        keep_specials: bool, 
                        keep_emojis: bool, 
                        keep_currency: bool,
-                       keep_digits: bool ):
+                       keep_digits: bool, 
+                       keep_spaces: bool):
     return TextFilter(nlp, 
                       keep_stopwords=keep_stopwords, 
                       keep_puncts=keep_puncts, 
@@ -35,6 +38,7 @@ class TextFilter:
                        keep_emojis=False,
                        keep_currency=False,
                        keep_digits=False,
+                       keep_spaces=False,
                        keyword_sep="FAMVEER"):
                        
         self.keep_stopwords = keep_stopwords
@@ -43,6 +47,7 @@ class TextFilter:
         self.keep_emojis = keep_emojis
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
+        self.keep_spaces = keep_spaces
         self.keyword_sep = keyword_sep
         self.nlp = nlp
         
@@ -53,6 +58,7 @@ class TextFilter:
         Token.set_extension("is_emoji", default=None, force=True)
         Token.set_extension("is_currency", default=None, force=True)
         Token.set_extension("is_digit", default=None, force=True)
+        Token.set_extension("is_space", default=None, force=True)
         Token.set_extension("to_remove", default=None, force=True)
     
     def __call__(self, doc: Doc) -> Doc:
@@ -64,8 +70,9 @@ class TextFilter:
             is_emoji = self.is_emoji(token.text.lower())
             is_currency = self.is_currency(token.text.lower())
             is_digit = self.is_digit(token.text.lower())
+            is_space = self.is_space(token.text.lower())
             
-            to_remove = is_emoji and is_special_character and is_stopword and is_punctutation and is_currency and is_digit
+            to_remove = is_emoji or is_special_character or is_stopword or is_punctutation or is_currency or is_digit
         
             # Set extension values for each token
             token._.set("is_stopword", is_stopword)
@@ -74,6 +81,7 @@ class TextFilter:
             token._.set("is_emoji", is_emoji)
             token._.set("is_currency", is_currency)
             token._.set("is_digit", is_digit)
+            token._.set("is_space", is_space)
             token._.set("to_remove", to_remove)
             
         return doc
@@ -94,7 +102,7 @@ class TextFilter:
         
         # remove special characters (any) within string
         # except - : /
-        new_token = re.sub('[^a-zA-Z0-9\s:/-]', '', new_token)
+        #new_token = re.sub('[^a-zA-Z0-9\s:/-]', '', new_token)
 
         # remove all single characters
         #new_token = re.sub(r'\s+[a-zA-Z]\s+', ' ', new_token)
@@ -171,7 +179,10 @@ class TextFilter:
 
     def filter_currency(self, token):
         return "" if self.nlp.vocab[token].is_currency else token.strip()
-        
+    
+    def is_space(self, token):
+        return len(self.filter_spaces(token)) == 0
+    
     def filter_spaces(self, token):
         
         # removing spaces in front and back
