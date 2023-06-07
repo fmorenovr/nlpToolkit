@@ -2,6 +2,7 @@
 
 import re
 import copy
+import spacy
 from spacy.language import Language
 from spacy.tokens import Doc, Token
 
@@ -92,8 +93,9 @@ class TextFilter:
         return new_doc
 
     def list_to_doc(self, string_list):
-        text = " ".join(string_list)  # Combine the strings into a single space-separated string
-        doc = self.nlp(text)  # Process the combined string with the spaCy pipeline
+        nlp = spacy.blank("en")
+        words = " ".join(string_list).split()  # Combine the strings into a single space-separated string
+        doc = Doc(nlp.vocab, words=words)  # Process the combined string with the spaCy pipeline
         return doc
 
     def doc_to_list(self, doc, to_lower=True):
