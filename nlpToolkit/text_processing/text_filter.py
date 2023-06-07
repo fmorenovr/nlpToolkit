@@ -217,7 +217,8 @@ class TextFilter:
     def break_subTokens(self, tokens):
         known_tokens = []
         
-        for sub_tokens in token.split():
+        for token in tokens:
+            sub_tokens = token.split()
             known_tokens.extend(sub_tokens)
         
         return known_tokens
