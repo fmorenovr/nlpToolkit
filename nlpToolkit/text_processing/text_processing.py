@@ -148,13 +148,13 @@ class TextProcesser:
         from spacy.tokenizer import Tokenizer
         self.nlp.tokenizer = Tokenizer(self.nlp.vocab)
         
-        self.nlp.add_pipe("text_filter", after="tok2vec", config={"keep_stopwords": False, 
-                                                                   "keep_puncts": False, 
-                                                                   "keep_specials": False, 
-                                                                   "keep_emojis": False, 
-                                                                   "keep_currency": False,
-                                                                   "keep_digits": False,
-                                                                   "keep_spaces": False,
+        self.nlp.add_pipe("text_filter", after="tok2vec", config={"keep_stopwords": self.keep_stopwords, 
+                                                                  "keep_puncts": self.keep_puncts, 
+                                                                  "keep_specials": self.keep_specials, 
+                                                                  "keep_emojis": self.keep_emojis, 
+                                                                  "keep_currency": self.keep_currency,
+                                                                  "keep_digits": self.keep_digits,
+                                                                  "keep_spaces": self.keep_spaces,
                                                                    })
         self.nlp.max_length = 10000000
 
