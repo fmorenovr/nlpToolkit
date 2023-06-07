@@ -62,7 +62,12 @@ class TextFilter:
         Token.set_extension("to_remove", default=None, force=True)
     
     def __call__(self, doc: Doc) -> Doc:
-        for token in doc:
+    
+        string_list = doc_to_list(doc)
+        filtered_string_list = self.filter(string_list)
+        new_doc = self.list_to_doc(filtered_string_list)
+    
+        for token in new_doc:
         
             is_stopword = self.is_stopword(token.text.lower())
             is_punctutation = self.is_punctuation(token.text.lower())
@@ -84,7 +89,18 @@ class TextFilter:
             token._.set("is_space", is_space)
             token._.set("to_remove", to_remove)
             
+        return new_doc
+
+    def list_to_doc(self, string_list):
+        text = " ".join(string_list)  # Combine the strings into a single space-separated string
+        doc = self.nlp(text)  # Process the combined string with the spaCy pipeline
         return doc
+
+    def doc_to_list(self, doc, to_lower=True):
+        if to_lower:
+            return [token.text.lower() for token in doc]
+        else:
+            return [token.text for token in doc]
 
     def is_special_character(self, token):
         return len(self.filter_special_characters(token)) == 0
@@ -93,6 +109,9 @@ class TextFilter:
 
         # filter keyword
         new_token = re.sub(self.keyword_sep, ' ', token)
+        
+        # filter all special characters
+        new_token = re.sub('[^a-zA-Z0-9\s]', '', new_token)
         
         # filter unknown characters
         new_token = re.sub('�', ' ', new_token)
@@ -210,6 +229,11 @@ class TextFilter:
         # Remove extra spaces
         filtered_tokens = copy.deepcopy([self.filter_spaces(token) for token in tokens if len(token)>0])
         filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
+            
+        # Remove special characters
+        if not self.keep_specials:
+            filtered_tokens = copy.deepcopy([self.filter_special_characters(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
         
         # Remove emojis
         if not self.keep_emojis:
@@ -234,11 +258,6 @@ class TextFilter:
         # Remove currency
         if not self.keep_currency:
             filtered_tokens = copy.deepcopy([self.filter_currency(token) for token in filtered_tokens if len(token)>0])
-            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
-            
-        # Remove special characters
-        if not self.keep_specials:
-            filtered_tokens = copy.deepcopy([self.filter_special_characters(token) for token in filtered_tokens if len(token)>0])
             filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
 
         # Remove '' characters

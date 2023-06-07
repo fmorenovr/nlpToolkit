@@ -51,7 +51,14 @@ class TextProcesser:
         self.keyword_sep = keyword_sep
         self.log_tqdm = log_tqdm
         self.exclude_pipe = exclude_pipe
-        self.txt_filter = TextFilter(None, 
+        
+        
+        if self.language_to_process is not None:
+            self.create_nlp()
+            self.set_txtFilter()
+
+    def set_txtFilter(self):
+        self.txt_filter = TextFilter(self.nlp, 
                                       keep_stopwords=keep_stopwords, 
                                       keep_puncts=keep_puncts, 
                                       keep_specials=keep_specials,
@@ -60,15 +67,13 @@ class TextProcesser:
                                       keep_digits=keep_digits, 
                                       keep_spaces=keep_spaces,
                                       keyword_sep=self.keyword_sep)
-        
-        if self.language_to_process is not None:
-            self.create_nlp()
 
     def set_nlp_language(self, language_to_process):
         self.language_to_process = language_to_process
         if self.to_stem:
             self.stemmer = SnowballStemmer(language=self.language_to_process)
         self.create_nlp()
+        self.set_txtFilter()
 
     def get_current_language(self):
         return self.language_to_process
