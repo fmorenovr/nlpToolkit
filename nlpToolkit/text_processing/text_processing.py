@@ -46,7 +46,6 @@ class TextProcesser:
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
         
-        
         self.keyword_sep = keyword_sep
         self.log_tqdm = log_tqdm
         self.exclude_pipe = exclude_pipe
@@ -156,7 +155,27 @@ class TextProcesser:
 
     def generate_tokens_from_text(self, doc):
     
-        filtered_tokens = [token for token in doc if not token._.to_remove]
+        filtered_tokens = [token for token in doc]
+        
+        if not self.keep_stopwords:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_stopword]
+        
+        if not self.keep_puncts:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_punctuation]
+        
+        if not self.keep_specials:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_special_character]
+        
+        if not self.keep_emojis:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_emoji]
+        
+        if not self.keep_currency:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_currency]
+        
+        if not self.keep_digits:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_digit]
+    
+        #filtered_tokens = [token for token in doc if not token._.to_remove]
     
         if self.to_lemma:
             # Tokenization, lemmatization, and convertion to lowercase

@@ -41,16 +41,16 @@ class TextFilter:
         self.keep_puncts = keep_puncts
         self.keep_specials = keep_specials
         self.keep_emojis = keep_emojis
-        self.keyword_sep = keyword_sep
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
+        self.keyword_sep = keyword_sep
         self.nlp = nlp
         
         # Define extensions
-        Token.set_extension("is_emoji", default=None, force=True)
-        Token.set_extension("is_special_character", default=None, force=True)
         Token.set_extension("is_stopword", default=None, force=True)
         Token.set_extension("is_punctuation", default=None, force=True)
+        Token.set_extension("is_special_character", default=None, force=True)
+        Token.set_extension("is_emoji", default=None, force=True)
         Token.set_extension("is_currency", default=None, force=True)
         Token.set_extension("is_digit", default=None, force=True)
         Token.set_extension("to_remove", default=None, force=True)
@@ -58,20 +58,21 @@ class TextFilter:
     def __call__(self, doc: Doc) -> Doc:
         for token in doc:
         
-            is_emoji = self.is_emoji(token.text.lower())
-            is_special_character = self.is_special_character(token.text.lower())
-            is_stopword = self.is_stopword(token.text.lower())
-            is_punctutation = self.is_punctuation(token.text.lower())
-            is_currency = self.is_currency(token.text.lower())
-            is_digit = self.is_digit(token.text.lower())
+            is_stopword = self.is_stopword(token.text.lower()) and self.keep_stopwords
+            is_punctutation = self.is_punctuation(token.text.lower()) and self.keep_puncts
+            is_special_character = self.is_special_character(token.text.lower()) and self.keep_specials
+            is_emoji = self.is_emoji(token.text.lower()) and self.keep_emojis
             
-            to_remove = is_emoji or is_special_character or is_stopword or is_punctutation or is_currency or is_digit
+            is_currency = self.is_currency(token.text.lower()) and self.keep_currency
+            is_digit = self.is_digit(token.text.lower()) and self.keep_digits
+            
+            to_remove = is_emoji and is_special_character and is_stopword and is_punctutation and is_currency and is_digit
         
             # Set extension values for each token
-            token._.set("is_emoji", is_emoji)
-            token._.set("is_special_character", is_special_character)
             token._.set("is_stopword", is_stopword)
             token._.set("is_punctuation", is_punctutation)
+            token._.set("is_special_character", is_special_character)
+            token._.set("is_emoji", is_emoji)
             token._.set("is_currency", is_currency)
             token._.set("is_digit", is_digit)
             token._.set("to_remove", to_remove)
@@ -161,6 +162,9 @@ class TextFilter:
         return len(self.filter_digits(token)) == 0
     
     def filter_digits(self, token):
+        
+        #'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?'
+    
         return "" if token.isdigit() else token.strip()
 
     def is_currency(self, token):
