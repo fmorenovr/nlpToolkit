@@ -59,13 +59,13 @@ class TextProcesser:
 
     def set_txtFilter(self):
         self.txt_filter = TextFilter(self.nlp, 
-                                      keep_stopwords=keep_stopwords, 
-                                      keep_puncts=keep_puncts, 
-                                      keep_specials=keep_specials,
-                                      keep_emojis=keep_emojis,
-                                      keep_currency=keep_currency, 
-                                      keep_digits=keep_digits, 
-                                      keep_spaces=keep_spaces,
+                                      keep_stopwords=self.keep_stopwords, 
+                                      keep_puncts=self.keep_puncts, 
+                                      keep_specials=self.keep_specials,
+                                      keep_emojis=self.keep_emojis,
+                                      keep_currency=self.keep_currency, 
+                                      keep_digits=self.keep_digits, 
+                                      keep_spaces=self.keep_spaces,
                                       keyword_sep=self.keyword_sep)
 
     def set_nlp_language(self, language_to_process):
