@@ -113,7 +113,7 @@ class TextFilter:
         new_token = re.sub(self.keyword_sep, ' ', token)
         
         # filter all special characters
-        new_token = re.sub('[^a-zA-Z0-9\s]', '', new_token)
+        new_token = re.sub('[^a-zA-Z0-9\s]', ' ', new_token)
         
         # filter unknown characters
         new_token = re.sub('�', ' ', new_token)
