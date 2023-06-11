@@ -119,7 +119,9 @@ class TextFilter:
 
     def filter_single_characters(self, token):
         # remove all single characters
-        new_token = re.sub(r'\s+[a-zA-Z0-9]\s+', ' ', token)
+        #new_token = re.sub(r'\s+[a-zA-Z0-9]\s+', ' ', token)
+        
+        new_token = re.sub(r'\b\w\b', '', token)
         
         # Remove single characters from the start
         #new_token = re.sub(r'\^[a-zA-Z]\s+', ' ', new_token) 

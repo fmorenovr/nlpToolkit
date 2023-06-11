@@ -16,6 +16,7 @@ class TextProcesser:
                        keep_stopwords=False, 
                        keep_puncts=False, 
                        keep_specials=False, 
+                       keep_singles=False,
                        keep_emojis=False,
                        keep_currency=False,
                        keep_digits=False,
@@ -43,6 +44,7 @@ class TextProcesser:
         self.keep_stopwords = keep_stopwords
         self.keep_puncts = keep_puncts
         self.keep_specials = keep_specials
+        self.keep_singles = keep_singles
         self.keep_emojis = keep_emojis
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
@@ -55,6 +57,7 @@ class TextProcesser:
                                       keep_stopwords=keep_stopwords, 
                                       keep_puncts=keep_puncts, 
                                       keep_specials=keep_specials,
+                                      keep_singles=keep_singles,
                                       keep_emojis=keep_emojis,
                                       keep_currency=keep_currency, 
                                       keep_digits=keep_digits, 
@@ -150,7 +153,8 @@ class TextProcesser:
         
         self.nlp.add_pipe("text_filter", after="tok2vec", config={"keep_stopwords": self.keep_stopwords, 
                                                                   "keep_puncts": self.keep_puncts, 
-                                                                  "keep_specials": self.keep_specials, 
+                                                                  "keep_specials": self.keep_specials,  
+                                                                  "keep_singles": self.keep_singles, 
                                                                   "keep_emojis": self.keep_emojis, 
                                                                   "keep_currency": self.keep_currency,
                                                                   "keep_digits": self.keep_digits,
@@ -179,6 +183,9 @@ class TextProcesser:
         
         if not self.keep_digits:
             filtered_tokens = [token for token in filtered_tokens if not token._.is_digit]
+            
+        if not self.keep_singles:
+            filtered_tokens = [token for token in filtered_tokens if not token._.is_single_character]
     
         #filtered_tokens = [token for token in doc if not token._.to_remove]
     
