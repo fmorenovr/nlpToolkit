@@ -9,6 +9,7 @@ from spacy.tokens import Doc, Token
 @Language.factory("text_filter", default_config={"keep_stopwords": False, 
                                                  "keep_puncts": False, 
                                                  "keep_specials": False, 
+                                                 "keep_singles": False,
                                                  "keep_emojis": False, 
                                                  "keep_currency": False, 
                                                  "keep_digits": False, 
@@ -19,23 +20,28 @@ def create_text_filter(nlp: Language,
                        keep_stopwords: bool, 
                        keep_puncts: bool, 
                        keep_specials: bool, 
+                       keep_singles: bool,
                        keep_emojis: bool, 
                        keep_currency: bool,
                        keep_digits: bool, 
-                       keep_spaces: bool):
+                       keep_spaces: bool, 
+                       ):
     return TextFilter(nlp, 
                       keep_stopwords=keep_stopwords, 
                       keep_puncts=keep_puncts, 
                       keep_specials=keep_specials, 
+                      keep_singles=keep_singles, 
                       keep_emojis=keep_emojis, 
                       keep_currency=keep_currency,
-                      keep_digits=keep_digits)
+                      keep_digits=keep_digits, 
+                      )
 
 class TextFilter:
     def __init__(self, nlp: Language,
                        keep_stopwords=False, 
                        keep_puncts=False, 
                        keep_specials=False, 
+                       keep_singles=False,
                        keep_emojis=False,
                        keep_currency=False,
                        keep_digits=False,
@@ -45,6 +51,7 @@ class TextFilter:
         self.keep_stopwords = keep_stopwords
         self.keep_puncts = keep_puncts
         self.keep_specials = keep_specials
+        self.keep_singles = keep_singles
         self.keep_emojis = keep_emojis
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
@@ -56,6 +63,7 @@ class TextFilter:
         Token.set_extension("is_stopword", default=None, force=True)
         Token.set_extension("is_punctuation", default=None, force=True)
         Token.set_extension("is_special_character", default=None, force=True)
+        Token.set_extension("is_single_character", default=None, force=True)
         Token.set_extension("is_emoji", default=None, force=True)
         Token.set_extension("is_currency", default=None, force=True)
         Token.set_extension("is_digit", default=None, force=True)
@@ -73,17 +81,19 @@ class TextFilter:
             is_stopword = self.is_stopword(token.text.lower())
             is_punctutation = self.is_punctuation(token.text.lower())
             is_special_character = self.is_special_character(token.text.lower())
+            is_single_character = self.is_single_character(token.text.lower())
             is_emoji = self.is_emoji(token.text.lower())
             is_currency = self.is_currency(token.text.lower())
             is_digit = self.is_digit(token.text.lower())
             is_space = self.is_space(token.text.lower())
             
-            to_remove = is_emoji or is_special_character or is_stopword or is_punctutation or is_currency or is_digit
+            to_remove = is_emoji or is_special_character or is_single_character or is_stopword or is_punctutation or is_currency or is_digit
         
             # Set extension values for each token
             token._.set("is_stopword", is_stopword)
             token._.set("is_punctuation", is_punctutation)
             token._.set("is_special_character", is_special_character)
+            token._.set("is_single_character", is_single_character)
             token._.set("is_emoji", is_emoji)
             token._.set("is_currency", is_currency)
             token._.set("is_digit", is_digit)
@@ -103,6 +113,18 @@ class TextFilter:
             return [token.text.lower() for token in doc]
         else:
             return [token.text for token in doc]
+
+    def is_single_character(self, token):
+        return len(self.filter_single_characters(token)) == 0
+
+    def filter_single_characters(self, token):
+        # remove all single characters
+        new_token = re.sub(r'\s+[a-zA-Z0-9]\s+', ' ', token)
+        
+        # Remove single characters from the start
+        #new_token = re.sub(r'\^[a-zA-Z]\s+', ' ', new_token) 
+        
+        return new_token.strip()
 
     def is_special_character(self, token):
         return len(self.filter_special_characters(token)) == 0
@@ -125,12 +147,6 @@ class TextFilter:
         # except - : /
         #new_token = re.sub('[^a-zA-Z0-9\s:/-]', '', new_token)
 
-        # remove all single characters
-        #new_token = re.sub(r'\s+[a-zA-Z]\s+', ' ', new_token)
-        
-        # Remove single characters from the start
-        #new_token = re.sub(r'\^[a-zA-Z]\s+', ' ', new_token) 
-        
         # Removing prefixed 'b'
         #new_word = re.sub(r'^b\s+', '', new_word)
 
@@ -260,6 +276,11 @@ class TextFilter:
         # Remove currency
         if not self.keep_currency:
             filtered_tokens = copy.deepcopy([self.filter_currency(token) for token in filtered_tokens if len(token)>0])
+            filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
+            
+        # Remove single characters
+        if not self.keep_singles:
+            filtered_tokens = copy.deepcopy([self.filter_single_characters(token) for token in filtered_tokens if len(token)>0])
             filtered_tokens = copy.deepcopy( self.break_subTokens(filtered_tokens) )
 
         # Remove '' characters
