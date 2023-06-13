@@ -185,7 +185,7 @@ class LanguageProcesser:
             incorrect_words_list = list(set(itertools.chain(*incorrect_words.values())))
             correct_words_list = list(set(itertools.chain(*correct_words.values())))
             processed_text = ""
-            all_words_ = 0
+            all_words_ = all_words[lang]
 
         self.ratios = ratios
         self.all_ratios = ratios_all
