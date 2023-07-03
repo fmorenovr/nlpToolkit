@@ -23,7 +23,7 @@ class TextProcesser:
                        keep_spaces=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=True, 
-                       exclude_pipe = ["parser", "ner"],
+                       exclude_pipe = ["parser", 'attribute_ruler', "ner"],
                        n_jobs=6):
         """WordCloud Drawer.
         Args:
@@ -94,12 +94,14 @@ class TextProcesser:
         Documentation: https://spacy.io/models
         
         NLP default has this pipeline:
-        tok2vec: Document Embedding
+        tok2vec: Convert raw text into word vectors (also known as word embeddings) that represent the meaning of each word in a document.
+        morphologizer: handles morphological analysis, providing information about the word's lemma, part-of-speech (POS) tag, and other morphological features.
+                       also, enable the generation of word forms from lemmas and morphological specifications.
         tagger: Part-of-Speech Tag Word Class (e.g. many ADJECTIVE, 2.33 NUMBER, etc.)
-        parser: Grammatical Morphological Analyzer (e.g. the DETERMINANT, has AUXILIAR, in PREPOSITION, etc.)
+        parser: Grammatical Morphological Analyzer building a dependency tree (e.g. the DETERMINANT, has AUXILIAR, in PREPOSITION, etc.)
+        lemmatizer: handles lemmatization, which is the process of reducing words to their base or canonical form (lemmas).
         attribute_ruler: Maps tagger and parser
-        lemmatizer: calculates lemma of each word
-        ner: Entity Recognition (e.g. matheus is PERSON, 2.33 is CARDINAL, yesterday is DATE, etc.)
+        ner: Named Entity Recognition (e.g. matheus is PERSON, 2.33 is CARDINAL, yesterday is DATE, etc.)
         """
         if self.language_to_process=="english" or self.language_to_process=="en":
             try:
