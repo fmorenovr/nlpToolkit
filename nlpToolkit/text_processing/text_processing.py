@@ -23,7 +23,7 @@ class TextProcesser:
                        keep_spaces=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=True, 
-                       exclude_pipe = ["parser", 'attribute_ruler', "ner"],
+                       exclude_pipe = ['morphologizer', "parser", 'attribute_ruler', "ner"],
                        n_jobs=6):
         """WordCloud Drawer.
         Args:
