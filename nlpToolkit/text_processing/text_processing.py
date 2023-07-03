@@ -110,7 +110,7 @@ class TextProcesser:
                 import en_core_web_sm
             #import spacy
             #nlp = spacy.load("en_core_web_sm")
-            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe)
+            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else en_core_web_sm.load()
         elif self.language_to_process=="russian" or self.language_to_process=="ru":
             try:
                 import ru_core_news_sm
@@ -119,7 +119,7 @@ class TextProcesser:
                 spacy.cli.download("ru_core_news_sm") # Russian
                 import ru_core_news_sm
             #nlp = spacy.load("ru_core_news_sm")
-            self.nlp = ru_core_news_sm.load(exclude=self.exclude_pipe)
+            self.nlp = ru_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else ru_core_news_sm.load()
         elif self.language_to_process=="portuguese" or self.language_to_process=="pt":
             try:
                 import pt_core_news_sm
@@ -128,7 +128,7 @@ class TextProcesser:
                 spacy.cli.download("pt_core_news_sm") # Portuguese
                 import pt_core_news_sm
             #nlp = spacy.load("pt_core_news_sm")
-            self.nlp = pt_core_news_sm.load(exclude=self.exclude_pipe)
+            self.nlp = pt_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else pt_core_news_sm.load()
         elif self.language_to_process=="deutsch" or self.language_to_process=="de":
             try:
                 import de_core_news_sm
@@ -137,7 +137,7 @@ class TextProcesser:
                 spacy.cli.download("de_core_news_sm") # Deutsch
                 import de_core_news_sm
             #nlp = spacy.load("de_core_news_sm")
-            self.nlp = de_core_news_sm.load(exclude=self.exclude_pipe)
+            self.nlp = de_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else de_core_news_sm.load()
         else:
             try:
                 import en_core_web_sm
@@ -146,7 +146,7 @@ class TextProcesser:
                 spacy.cli.download("en_core_web_sm") # English
                 import en_core_web_sm
             #nlp = spacy.load("en_core_web_sm")
-            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe)
+            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else en_core_web_sm.load()
 
         from spacy.tokenizer import Tokenizer
         self.nlp.tokenizer = Tokenizer(self.nlp.vocab)
