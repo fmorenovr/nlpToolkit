@@ -188,7 +188,7 @@ class LanguageProcesser:
             all_words_ = all_words[lang]
 
         self.ratios = ratios
-        self.all_ratios = ratios_all
+        self.ratios_all_words = ratios_all
         self.language_detected = language_detected
         self.incorrect_words = incorrect_words_list
         self.correct_words = correct_words_list
@@ -204,7 +204,7 @@ class LanguageProcesser:
     
     # return language detected
     def get_all_language_ratios(self):
-        return self.all_ratios
+        return self.ratios_all_words
 
     # return ratio of detected language
     def get_detected_language_ratio(self):
