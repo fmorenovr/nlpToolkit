@@ -23,7 +23,7 @@ class TextProcesser:
                        keep_spaces=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=True, 
-                       exclude_pipe = ["parser", "ner"],
+                       exclude_pipe = ['morphologizer', "parser", 'attribute_ruler', "ner"],
                        n_jobs=6):
         """WordCloud Drawer.
         Args:
@@ -94,12 +94,14 @@ class TextProcesser:
         Documentation: https://spacy.io/models
         
         NLP default has this pipeline:
-        tok2vec: Document Embedding
+        tok2vec: Convert raw text into word vectors (also known as word embeddings) that represent the meaning of each word in a document.
+        morphologizer: handles morphological analysis, providing information about the word's lemma, part-of-speech (POS) tag, and other morphological features.
+                       also, enable the generation of word forms from lemmas and morphological specifications.
         tagger: Part-of-Speech Tag Word Class (e.g. many ADJECTIVE, 2.33 NUMBER, etc.)
-        parser: Grammatical Morphological Analyzer (e.g. the DETERMINANT, has AUXILIAR, in PREPOSITION, etc.)
+        parser: Grammatical Morphological Analyzer building a dependency tree (e.g. the DETERMINANT, has AUXILIAR, in PREPOSITION, etc.)
+        lemmatizer: handles lemmatization, which is the process of reducing words to their base or canonical form (lemmas).
         attribute_ruler: Maps tagger and parser
-        lemmatizer: calculates lemma of each word
-        ner: Entity Recognition (e.g. matheus is PERSON, 2.33 is CARDINAL, yesterday is DATE, etc.)
+        ner: Named Entity Recognition (e.g. matheus is PERSON, 2.33 is CARDINAL, yesterday is DATE, etc.)
         """
         if self.language_to_process=="english" or self.language_to_process=="en":
             try:
@@ -110,7 +112,7 @@ class TextProcesser:
                 import en_core_web_sm
             #import spacy
             #nlp = spacy.load("en_core_web_sm")
-            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe)
+            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else en_core_web_sm.load()
         elif self.language_to_process=="russian" or self.language_to_process=="ru":
             try:
                 import ru_core_news_sm
@@ -119,7 +121,7 @@ class TextProcesser:
                 spacy.cli.download("ru_core_news_sm") # Russian
                 import ru_core_news_sm
             #nlp = spacy.load("ru_core_news_sm")
-            self.nlp = ru_core_news_sm.load(exclude=self.exclude_pipe)
+            self.nlp = ru_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else ru_core_news_sm.load()
         elif self.language_to_process=="portuguese" or self.language_to_process=="pt":
             try:
                 import pt_core_news_sm
@@ -128,7 +130,7 @@ class TextProcesser:
                 spacy.cli.download("pt_core_news_sm") # Portuguese
                 import pt_core_news_sm
             #nlp = spacy.load("pt_core_news_sm")
-            self.nlp = pt_core_news_sm.load(exclude=self.exclude_pipe)
+            self.nlp = pt_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else pt_core_news_sm.load()
         elif self.language_to_process=="deutsch" or self.language_to_process=="de":
             try:
                 import de_core_news_sm
@@ -137,7 +139,7 @@ class TextProcesser:
                 spacy.cli.download("de_core_news_sm") # Deutsch
                 import de_core_news_sm
             #nlp = spacy.load("de_core_news_sm")
-            self.nlp = de_core_news_sm.load(exclude=self.exclude_pipe)
+            self.nlp = de_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else de_core_news_sm.load()
         else:
             try:
                 import en_core_web_sm
@@ -146,7 +148,7 @@ class TextProcesser:
                 spacy.cli.download("en_core_web_sm") # English
                 import en_core_web_sm
             #nlp = spacy.load("en_core_web_sm")
-            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe)
+            self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else en_core_web_sm.load()
 
         from spacy.tokenizer import Tokenizer
         self.nlp.tokenizer = Tokenizer(self.nlp.vocab)
