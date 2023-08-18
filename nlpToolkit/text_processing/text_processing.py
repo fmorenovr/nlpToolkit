@@ -13,6 +13,7 @@ class TextProcesser:
     def __init__(self, language_to_process=None, 
                        to_lemma=True, 
                        to_stem=False, 
+                       word_min_len=0,
                        keep_stopwords=False, 
                        keep_puncts=False, 
                        keep_specials=False, 
@@ -41,6 +42,7 @@ class TextProcesser:
         self.to_lemma = to_lemma
         self.to_stem = to_stem
         
+        self.word_min_len = word_min_len
         self.keep_stopwords = keep_stopwords
         self.keep_puncts = keep_puncts
         self.keep_specials = keep_specials
@@ -202,7 +204,7 @@ class TextProcesser:
             token_list = [token.text.lower() for token in filtered_tokens]
         
         token_list = [token.strip() for token in token_list]
-        token_list = [token.strip() for token in token_list if len(token)>0]
+        token_list = [token.strip() for token in token_list if len(token)>self.word_min_len]
         token_list = [token.strip() for token in token_list if token!=self.keyword_sep]
         
         return token_list

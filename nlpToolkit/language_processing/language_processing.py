@@ -12,6 +12,7 @@ class LanguageProcesser:
                        use_spacy=True, 
                        to_lemma=False, 
                        to_stem=False, 
+                       word_min_len=0,
                        keep_stopwords=False, 
                        keep_puncts=False, 
                        keep_specials=False, 
@@ -42,6 +43,7 @@ class LanguageProcesser:
         self.nltk_keep_punct = nltk_keep_punct
         self.txt_processer = TextProcesser(to_lemma=to_lemma, 
                                            to_stem=to_stem,
+                                           word_min_len=word_min_len,
                                            keep_stopwords=keep_stopwords, 
                                            keep_puncts=keep_puncts, 
                                            keep_specials=keep_specials, 
