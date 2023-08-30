@@ -20,6 +20,7 @@ class LanguageProcesser:
                        keep_currency=False,
                        keep_digits=False,
                        keep_spaces=False,
+                       exclude_pipe=['tagger', 'parser', 'ner'],
                        keyword_sep="FAMVEER",
                        log_tqdm=False, 
                        nltk_keep_punct=True):
@@ -52,6 +53,7 @@ class LanguageProcesser:
                                            keep_digits=keep_digits, 
                                            keep_spaces=keep_spaces,
                                            keyword_sep=keyword_sep,
+                                           exclude_pipe=exclude_pipe,
                                            log_tqdm=log_tqdm, 
                                            )
 
