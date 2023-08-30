@@ -20,7 +20,7 @@ class LanguageProcesser:
                        keep_currency=False,
                        keep_digits=False,
                        keep_spaces=False,
-                       exclude_pipe=['tagger', 'parser', 'ner'],
+                       exclude_pipe=['morphologizer', "parser", 'attribute_ruler', "ner"],
                        keyword_sep="FAMVEER",
                        log_tqdm=False, 
                        nltk_keep_punct=True):
