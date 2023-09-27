@@ -52,7 +52,7 @@ class TextProcesser:
         self.keep_digits = keep_digits
         self.keep_spaces = keep_spaces
         
-        self.keyword_sep = keyword_sep
+        self.keyword_sep = keyword_sep.lower()
         self.log_tqdm = log_tqdm
         self.exclude_pipe = exclude_pipe
         self.txt_filter = TextFilter(None, 

@@ -56,7 +56,7 @@ class TextFilter:
         self.keep_currency = keep_currency
         self.keep_digits = keep_digits
         self.keep_spaces = keep_spaces
-        self.keyword_sep = keyword_sep
+        self.keyword_sep = keyword_sep.lower()
         self.nlp = nlp
         
         # Define extensions
