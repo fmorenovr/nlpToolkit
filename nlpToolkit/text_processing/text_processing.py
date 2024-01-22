@@ -142,6 +142,15 @@ class TextProcesser:
                 import de_core_news_sm
             #nlp = spacy.load("de_core_news_sm")
             self.nlp = de_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else de_core_news_sm.load()
+        elif self.language_to_process=="spanish" or self.language_to_process=="es":
+            try:
+                import es_core_news_sm
+            except:
+                import spacy
+                spacy.cli.download("es_core_news_sm") # Spanish
+                import es_core_news_sm
+            #nlp = spacy.load("es_core_news_sm")
+            self.nlp = es_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else es_core_news_sm.load()
         else:
             try:
                 import en_core_web_sm
