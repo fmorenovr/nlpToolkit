@@ -35,6 +35,7 @@ class LanguageProcesser:
              "german": "de_DE",
              "english": "en_US",
              "russian": "ru_RU",
+             "spanish": "es_ES",
             }
         
         self.languages_to_eval = languages_to_eval
