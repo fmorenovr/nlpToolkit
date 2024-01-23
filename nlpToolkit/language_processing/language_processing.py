@@ -145,6 +145,7 @@ class LanguageProcesser:
         for language in self.languages_to_eval:
         
             self.set_nlp_language(language)
+            self.get_nlp_pipeline()
         
             languages_ratios[language] = {}
 
