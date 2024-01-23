@@ -23,6 +23,7 @@ class LanguageProcesser:
                        exclude_pipe=['morphologizer', "parser", 'attribute_ruler', "ner"],
                        keyword_sep="FAMVEER",
                        log_tqdm=False, 
+                       log=False, 
                        nltk_keep_punct=True):
         """Full text preprocessing.
         Args:
@@ -42,6 +43,7 @@ class LanguageProcesser:
         self.use_spacy = use_spacy
         self.to_stem = to_stem
         self.keyword_sep = keyword_sep
+        self.log = log
         self.nltk_keep_punct = nltk_keep_punct
         self.txt_processer = TextProcesser(to_lemma=to_lemma, 
                                            to_stem=to_stem,
@@ -145,7 +147,8 @@ class LanguageProcesser:
         for language in self.languages_to_eval:
         
             self.set_nlp_language(language)
-            self.get_nlp_pipeline()
+            if self.log:
+                print("Languages", self.get_nlp_pipeline())
         
             languages_ratios[language] = {}
 
