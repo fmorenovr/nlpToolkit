@@ -172,6 +172,8 @@ class LanguageProcesser:
         proc_txt = {}
         all_words = {}
         
+        all_txt_analyzed = []
+        
         for lang in self.languages_to_eval:
             ratios[lang] = lang_freq[lang]["ratio"]
             incorrect_words[lang] = lang_freq[lang]["incorrect_words"]
@@ -179,6 +181,7 @@ class LanguageProcesser:
             proc_txt[lang] = lang_freq[lang]["text_processed"]
             all_words[lang] = lang_freq[lang]["all_words"]
             ratios_all[lang] = lang_freq[lang]["ratio_all_words"]
+            all_txt_analyzed.append(proc_txt[lang])
         
         if max(ratios.values())>0.0:
             language_detected = max(ratios, key=ratios.get)
@@ -190,7 +193,7 @@ class LanguageProcesser:
             language_detected = "not found"
             incorrect_words_list = list(set(itertools.chain(*incorrect_words.values())))
             correct_words_list = list(set(itertools.chain(*correct_words.values())))
-            processed_text = ""
+            processed_text = list(set(itertools.chain(*all_txt_analyzed)))
             all_words_ = all_words[lang]
 
         self.ratios = ratios
