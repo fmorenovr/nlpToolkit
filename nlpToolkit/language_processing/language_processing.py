@@ -154,13 +154,15 @@ class LanguageProcesser:
 
             word_list, total_word_list, text_processed = self.get_words_list(sentence)
             ratio_lang, incorrect_words_lang, correct_words_lang = self.get_words_ratio(word_list, language)
-            ratio_lang_all, _, _ = self.get_words_ratio(total_word_list, language)
+            ratio_lang_all, incorrect_words_lang_all, correct_words_lang_all = self.get_words_ratio(total_word_list, language)
             
             languages_ratios[language]["ratio"] = ratio_lang
             languages_ratios[language]["incorrect_words"] = incorrect_words_lang
             languages_ratios[language]["correct_words"] = correct_words_lang
-            languages_ratios[language]["text_processed"] = text_processed
+            languages_ratios[language]["all_incorrect_words"] = incorrect_words_lang_all
+            languages_ratios[language]["all_correct_words"] = correct_words_lang_all
             languages_ratios[language]["all_words"] = total_word_list
+            languages_ratios[language]["text_processed"] = text_processed
             languages_ratios[language]["ratio_all_words"] = ratio_lang_all
         
         return languages_ratios
@@ -171,6 +173,8 @@ class LanguageProcesser:
         ratios = {}
         ratios_all = {}
         incorrect_words = {}
+        all_correct_words = {}
+        all_incorrect_words = {}
         correct_words = {}
         proc_txt = {}
         all_words = {}
@@ -181,6 +185,8 @@ class LanguageProcesser:
             ratios[lang] = lang_freq[lang]["ratio"]
             incorrect_words[lang] = lang_freq[lang]["incorrect_words"]
             correct_words[lang] = lang_freq[lang]["correct_words"]
+            all_incorrect_words[lang] = lang_freq[lang]["all_incorrect_words"]
+            all_correct_words[lang] = lang_freq[lang]["all_correct_words"]
             proc_txt[lang] = lang_freq[lang]["text_processed"]
             all_words[lang] = lang_freq[lang]["all_words"]
             ratios_all[lang] = lang_freq[lang]["ratio_all_words"]
@@ -190,12 +196,16 @@ class LanguageProcesser:
             language_detected = max(ratios, key=ratios.get)
             incorrect_words_list = list(incorrect_words[language_detected])
             correct_words_list = list(correct_words[language_detected])
+            all_incorrect_words_list = list(all_incorrect_words[language_detected])
+            all_correct_words_list = list(all_correct_words[language_detected])
             processed_text = proc_txt[language_detected]
             all_words_ = all_words[lang]
         else:
             language_detected = "not found"
             incorrect_words_list = list(set(itertools.chain(*incorrect_words.values())))
             correct_words_list = list(set(itertools.chain(*correct_words.values())))
+            all_incorrect_words_list = list(set(itertools.chain(*all_incorrect_words.values())))
+            all_correct_words_list = list(set(itertools.chain(*all_correct_words.values())))
             processed_text = list(set(itertools.chain(*all_txt_analyzed)))
             all_words_ = all_words[lang]
 
@@ -204,6 +214,8 @@ class LanguageProcesser:
         self.language_detected = language_detected
         self.incorrect_words = incorrect_words_list
         self.correct_words = correct_words_list
+        self.all_incorrect_words = all_incorrect_words_list
+        self.all_correct_words = all_correct_words_list
         self.processed_text = processed_text
         self.all_words = all_words_
 
@@ -240,6 +252,14 @@ class LanguageProcesser:
     def get_correct_words_len(self):        
         return len(self.correct_words)
 
+    # return list of correct words in the most rated language
+    def get_all_correct_words(self):        
+        return self.all_correct_words
+
+    # return length of correct words in the most rated language
+    def get_all_correct_words_len(self):        
+        return len(self.all_correct_words)
+
     # return list of incorrect words in the most rated language
     def get_incorrect_words(self): 
         return self.incorrect_words
@@ -247,6 +267,14 @@ class LanguageProcesser:
     # return length  of incorrect words in the most rated language
     def get_incorrect_words_len(self):        
         return len(self.incorrect_words)
+
+    # return list of incorrect words in the most rated language
+    def get_all_incorrect_words(self): 
+        return self.all_incorrect_words
+
+    # return length  of incorrect words in the most rated language
+    def get_all_incorrect_words_len(self):        
+        return len(self.all_incorrect_words)
 
     # NLTK procesing texts
     def nltk_process_texts(self, texts, language_to_process=None):
