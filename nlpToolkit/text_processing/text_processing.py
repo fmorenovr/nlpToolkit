@@ -14,6 +14,7 @@ class TextProcesser:
     def __init__(self, language_to_process=None, 
                        to_lemma=True, 
                        to_stem=False, 
+                       to_filter_char=False,
                        word_min_len=0,
                        keep_stopwords=False, 
                        keep_puncts=False, 
@@ -200,12 +201,9 @@ class TextProcesser:
     
         #filtered_tokens = [token for token in doc if not token._.to_remove]
     
-        if self.to_lemma:
-            # Tokenization, lemmatization, and convertion to lowercase
-            token_list = [token.lemma_.lower() for token in filtered_tokens]
-        elif self.to_stem:
-            # Tokenization, stemming, and convertion to lowercase
-            token_list = [self.stemmer.stem(token.text.lower()) for token in filtered_tokens]
+        if self.to_lemma or self.to_stem:
+            # Tokenization, lemmatization or stemming, and convertion to lowercase
+            token_list = [token.lemma_.lower() if self.to_lemma else self.stemmer.stem(token.text.lower()) for token in filtered_tokens]
         else:
             # Tokenization and convertion to lowercase
             token_list = [token.text.lower() for token in filtered_tokens]
