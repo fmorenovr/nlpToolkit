@@ -3,6 +3,7 @@
 from nltk.stem.snowball import SnowballStemmer
 from tqdm.auto import tqdm
 import re
+import spacy
 import copy
 import itertools
 
@@ -109,56 +110,43 @@ class TextProcesser:
             try:
                 import en_core_web_sm
             except:
-                import spacy
                 spacy.cli.download("en_core_web_sm") # English
                 import en_core_web_sm
-            #import spacy
-            #nlp = spacy.load("en_core_web_sm")
             self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else spacy.load('en_core_web_sm')
         elif self.language_to_process=="russian" or self.language_to_process=="ru":
             try:
                 import ru_core_news_sm
             except:
-                import spacy
                 spacy.cli.download("ru_core_news_sm") # Russian
                 import ru_core_news_sm
-            #nlp = spacy.load("ru_core_news_sm")
             self.nlp = ru_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else spacy.load('ru_core_news_sm')
         elif self.language_to_process=="portuguese" or self.language_to_process=="pt":
             try:
                 import pt_core_news_sm
             except:
-                import spacy
                 spacy.cli.download("pt_core_news_sm") # Portuguese
                 import pt_core_news_sm
-            #nlp = spacy.load("pt_core_news_sm")
             self.nlp = pt_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else spacy.load('pt_core_news_sm')
         elif self.language_to_process=="deutsch" or self.language_to_process=="de":
             try:
                 import de_core_news_sm
             except:
-                import spacy
                 spacy.cli.download("de_core_news_sm") # Deutsch
                 import de_core_news_sm
-            #nlp = spacy.load("de_core_news_sm")
             self.nlp = de_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else spacy.load('de_core_news_sm')
         elif self.language_to_process=="spanish" or self.language_to_process=="es":
             try:
                 import es_core_news_sm
             except:
-                import spacy
                 spacy.cli.download("es_core_news_sm") # Spanish
                 import es_core_news_sm
-            #nlp = spacy.load("es_core_news_sm")
             self.nlp = es_core_news_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else spacy.load('es_core_news_sm')
         else:
             try:
                 import en_core_web_sm
             except:
-                import spacy
                 spacy.cli.download("en_core_web_sm") # English
                 import en_core_web_sm
-            #nlp = spacy.load("en_core_web_sm")
             self.nlp = en_core_web_sm.load(exclude=self.exclude_pipe) if len(self.exclude_pipe)>0 else spacy.load('en_core_web_sm')
 
         from spacy.tokenizer import Tokenizer
