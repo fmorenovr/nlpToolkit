@@ -192,7 +192,7 @@ class LanguageProcesser:
             ratios_all[lang] = lang_freq[lang]["ratio_all_words"]
             all_txt_analyzed.append(proc_txt[lang])
         
-        if max(ratios.values())>0.20:
+        if max(ratios.values())>0.0:
             language_detected = max(ratios, key=ratios.get)
             incorrect_words_list = list(incorrect_words[language_detected])
             correct_words_list = list(correct_words[language_detected])
