@@ -80,7 +80,8 @@ class WordCloudPlotter:
 
     # set nlp language
     def set_nlp_language(self, language_to_process):
-        self.txt_processer.set_nlp_language(language_to_process=language_to_process)
+        self.txt_processer.set_nlp_language(language_to_process)
+        self.nlp = self.txt_processer.get_nlp_language()
 
     # return gray scale
     def to_grey_color_func(self, word, font_size, position, orientation, random_state=None, **kwargs):
@@ -133,7 +134,7 @@ class WordCloudPlotter:
     # return words freq dict
     def process_texts_by_language(self, texts, language_to_process="english"):
         
-        self.set_nlp_language(language_to_process=language_to_process)
+        self.set_nlp_language(language_to_process)
         
         # Process and return word list
         _ = self.txt_processer.process_texts_by_language(texts)
@@ -147,23 +148,20 @@ class WordCloudPlotter:
 
         self.freq_dict = FreqDist(word_list)
     
-    def process_wordlist(self, tokens, languages_list=[]):
+    def calculate_words_frequency(self, texts, languages_list=[]):
     
         if type(languages_list)==str:
             languages_list = [languages_list]
-            
-        word_list = self.txt_processer.process_wordlist(tokens, languages_list)
         
-        return word_list
-    
-    def calculate_words_frequency(self, texts, languages_list=[]):
-
-        texts_tokens = [txt.split(" ") for txt in texts]
-        word_list = list(itertools.chain(*texts_tokens))
-
-        if len(languages_list)>0:
-            word_list = self.process_wordlist(word_list, languages_list)
-
+        final_word_list = []
+        
+        for language in self.languages_to_eval:
+            
+            word_list = self.process_texts_by_language(texts, language) 
+            
+            final_word_list.append(word_list)
+        final_word_list = list(itertools.chain(*final_word_list))
+        
         self.freq_dict = FreqDist(word_list)
         
     def get_freq_dict(self):

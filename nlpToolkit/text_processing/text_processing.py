@@ -26,7 +26,7 @@ class TextProcesser:
                        keep_spaces=False,
                        keyword_sep="FAMVEER",
                        log_tqdm=True, 
-                       exclude_pipe = None,
+                       exclude_pipe = ['morphologizer', "parser", "tagger", 'attribute_ruler', "ner"],
                        n_jobs=6):
         """WordCloud Drawer.
         Args:
@@ -79,10 +79,7 @@ class TextProcesser:
         if self.to_stem:
             self.stemmer = SnowballStemmer(language=self.language_to_process)
         self.create_nlp()
-        self.create_nlp_pipeline()
-    
-    def create_nlp_pipeline(self):
-        self.exclude_pipe = ['morphologizer', "parser", "ner", "attribute_ruler", "tagger"] if self.language_to_process == "english" else ['morphologizer', "parser", "ner", "attribute_ruler", "tagger"]
+        self.set_nlp_pipeline(exclude_pipe)
     
     def set_nlp_pipeline(self, pipe):
         self.exclude_pipe = pipe
