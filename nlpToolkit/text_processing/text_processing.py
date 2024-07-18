@@ -79,7 +79,6 @@ class TextProcesser:
         if self.to_stem:
             self.stemmer = SnowballStemmer(language=self.language_to_process)
         self.create_nlp()
-        self.set_nlp_pipeline(exclude_pipe)
     
     def set_nlp_pipeline(self, pipe):
         self.exclude_pipe = pipe
