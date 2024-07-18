@@ -155,7 +155,7 @@ class WordCloudPlotter:
         
         final_word_list = []
         
-        for language in self.languages_to_eval:
+        for language in self.language_to_process:
             
             word_list = self.process_texts_by_language(texts, language) 
             
