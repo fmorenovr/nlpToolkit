@@ -83,6 +83,9 @@ class WordCloudPlotter:
         self.txt_processer.set_nlp_language(language_to_process)
         self.nlp = self.txt_processer.get_nlp_language()
 
+    def get_nlp_pipeline(self):
+        return self.txt_processer.get_nlp_pipeline()
+
     # return gray scale
     def to_grey_color_func(self, word, font_size, position, orientation, random_state=None, **kwargs):
         return "hsl(0, 0%%, %d%%)" % random.randint(60, 100)
