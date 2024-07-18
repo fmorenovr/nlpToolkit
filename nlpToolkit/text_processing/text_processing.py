@@ -80,7 +80,7 @@ class TextProcesser:
             self.stemmer = SnowballStemmer(language=self.language_to_process)
         self.create_nlp()
 
-    def get_nlp_pipeline(self):
+    def get_nlp_language(self):
         return self.nlp
     
     def set_nlp_pipeline(self, pipe):
