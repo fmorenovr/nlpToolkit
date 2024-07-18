@@ -20,6 +20,7 @@ class WordCloudPlotter:
                         max_font_size=300, 
                         figsize=(20,10), 
                         to_gray_scale=False,
+                        exclude_pipe=['morphologizer', "parser", 'attribute_ruler', "ner"],
                         background_color="white", 
                         random_state=42):
         """WordCloud Drawer.
@@ -32,7 +33,10 @@ class WordCloudPlotter:
             to_gray_scale (bool): draw in gray/rgb
         """
         self.language_to_process = language_to_process
-        self.txt_processer = TextProcesser(language_to_process = language_to_process, log_tqdm=False)
+        self.txt_processer = TextProcesser(language_to_process = language_to_process, 
+                                           log_tqdm=False, 
+                                           exclude_pipe=exclude_pipe,
+                                           )
         self.max_words = max_words
         self.mask = mask
         self.width = width
