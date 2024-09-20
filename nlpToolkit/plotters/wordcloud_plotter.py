@@ -175,6 +175,19 @@ class WordCloudPlotter:
         for key in rm_list:
             freq_dict.pop(key, None)
         return freq_dict
+        
+    def plotWordCloud_from_dict(self, freq_dict, title, fontsize=30): 
+        
+        self.wc_plotter.generate_from_frequencies(freq_dict)
+
+        fig = plt.figure(figsize=self.figsize)
+        plt.axis("off")
+        plt.title(title, fontsize=fontsize)
+        if self.to_gray_scale:
+            plt.imshow(self.wc_plotter.recolor(color_func=self.to_grey_color_func, random_state=3), interpolation="bilinear")
+        else:
+            plt.imshow(self.wc_plotter, interpolation="bilinear")
+        plt.show()
             
     def plotWordCloud(self, title, fontsize=30): 
 
